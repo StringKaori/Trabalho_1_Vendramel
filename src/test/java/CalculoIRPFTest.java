@@ -1,72 +1,80 @@
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.sleep.CalculoIRPF;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CalculoIRPFTest {
 
+    CalculoIRPF calculo = new CalculoIRPF();
+
     @Test
-    @DisplayName("Salário exatamente 2259.20 deve ser isento")
-    void testLimiteIsento() {
-        double imposto = new CalculoIRPF().CalcularImposto(2259.20);
-        assertEquals(0.0, imposto, 0.01);
+    void testSalarioNegativo() {
+        assertEquals(0.0, calculo.CalcularImposto(-1000.0), 0.0001);
     }
 
     @Test
-    @DisplayName("Salário exatamente 2259.21 entra na faixa 7.5%")
-    void testLimiteFaixa75Inicio() {
-        double imposto = new CalculoIRPF().CalcularImposto(2259.21);
-        double esperado = (2259.21 * 0.075) - 169.44;
-        assertEquals(esperado, imposto, 0.01);
+    void testSalarioZero() {
+        assertEquals(0.0, calculo.CalcularImposto(0.0), 0.0001);
     }
 
     @Test
-    @DisplayName("Salário exatamente 2826.65 ainda na faixa 7.5%")
-    void testLimiteFaixa75Fim() {
-        double imposto = new CalculoIRPF().CalcularImposto(2826.65);
-        double esperado = (2826.65 * 0.075) - 169.44;
-        assertEquals(esperado, imposto, 0.01);
+    void testFaixaIsencaoLimite() {
+        assertEquals(0.0, calculo.CalcularImposto(2259.20), 0.0001);
     }
 
     @Test
-    @DisplayName("Salário exatamente 2826.66 entra na faixa 15%")
-    void testLimiteFaixa15Inicio() {
-        double imposto = new CalculoIRPF().CalcularImposto(2826.66);
-        double esperado = (2826.66 * 0.15) - 381.44;
-        assertEquals(esperado, imposto, 0.01);
+    void testFaixa7_5PercentualInicio() {
+        double imposto = calculo.CalcularImposto(2259.21);
+        assertEquals((2259.21 * 0.075) - 169.44, imposto, 0.0001);
     }
 
     @Test
-    @DisplayName("Salário exatamente 3751.05 ainda na faixa 15%")
-    void testLimiteFaixa15Fim() {
-        double imposto = new CalculoIRPF().CalcularImposto(3751.05);
-        double esperado = (3751.05 * 0.15) - 381.44;
-        assertEquals(esperado, imposto, 0.01);
+    void testFaixa7_5PercentualFim() {
+        double imposto = calculo.CalcularImposto(2826.65);
+        assertEquals((2826.65 * 0.075) - 169.44, imposto, 0.0001);
     }
 
     @Test
-    @DisplayName("Salário exatamente 3751.06 entra na faixa 22.5%")
-    void testLimiteFaixa225Inicio() {
-        double imposto = new CalculoIRPF().CalcularImposto(3751.06);
-        double esperado = (3751.06 * 0.225) - 662.77;
-        assertEquals(esperado, imposto, 0.01);
+    void testFaixa15PercentualInicio() {
+        double imposto = calculo.CalcularImposto(2826.66);
+        assertEquals((2826.66 * 0.15) - 381.44, imposto, 0.0001);
     }
 
     @Test
-    @DisplayName("Salário exatamente 4664.68 ainda na faixa 22.5%")
-    void testLimiteFaixa225Fim() {
-        double imposto = new CalculoIRPF().CalcularImposto(4664.68);
-        double esperado = (4664.68 * 0.225) - 662.77;
-        assertEquals(esperado, imposto, 0.01);
+    void testFaixa15PercentualFim() {
+        double imposto = calculo.CalcularImposto(3751.05);
+        assertEquals((3751.05 * 0.15) - 381.44, imposto, 0.0001);
     }
 
     @Test
-    @DisplayName("Salário exatamente 4664.69 entra na faixa 27.5%")
-    void testLimiteFaixa275() {
-        double imposto =  new CalculoIRPF().CalcularImposto(4664.69);
-        double esperado = (4664.69 * 0.275) - 896.0;
-        assertEquals(esperado, imposto, 0.01);
+    void testFaixa22_5PercentualInicio() {
+        double imposto = calculo.CalcularImposto(3751.06);
+        assertEquals((3751.06 * 0.225) - 662.77, imposto, 0.0001);
     }
+
+    @Test
+    void testFaixa22_5PercentualFim() {
+        double imposto = calculo.CalcularImposto(4664.68);
+        assertEquals((4664.68 * 0.225) - 662.77, imposto, 0.0001);
+    }
+
+    @Test
+    void testFaixa27_5PercentualInicio() {
+        double imposto = calculo.CalcularImposto(4664.69);
+        assertEquals((4664.69 * 0.275) - 896.0, imposto, 0.0001);
+    }
+
+    @Test
+    void testFaixa27_5PercentualAlto() {
+        double imposto = calculo.CalcularImposto(10000.0);
+        assertEquals((10000.0 * 0.275) - 896.0, imposto, 0.0001);
+    }
+
+    @Test
+    void testValorNulo() {
+        assertThrows(NullPointerException.class, () -> {
+            calculo.CalcularImposto(null);
+        });
+    }
+
 }
