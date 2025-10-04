@@ -2,11 +2,16 @@ package com.sleep;
 
 public class CalculoIRPF {
 
-    public double CalcularImposto(double salario) {        
+    public double CalcularImposto(Double salario) {    
         double aliquota = 0.0;
         double parcelaDeduzir = 0.0;
-        double imposto = 0.0;
-
+        double imposto = 0.0;    
+        if (salario < 0) {
+            salario = 0.0;
+        }
+        if(!(salario instanceof Double)) {
+            salario = 0.0;
+        }
         if (salario <= 2259.20) {
             aliquota = 0.0;
             parcelaDeduzir = 0.0;
@@ -23,9 +28,7 @@ public class CalculoIRPF {
             aliquota = 27.5;
             parcelaDeduzir = 896.0;
         }
-
         imposto = (salario * (aliquota / 100.0)) - parcelaDeduzir;
-
         return imposto;
     }
 
