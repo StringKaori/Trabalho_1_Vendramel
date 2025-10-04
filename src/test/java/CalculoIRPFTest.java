@@ -71,10 +71,16 @@ public class CalculoIRPFTest {
     }
 
     @Test
-    void testValorNulo() {
+    void testValorNaoDouble() {
         assertThrows(NullPointerException.class, () -> {
             calculo.CalcularImposto(null);
         });
+    }
+
+    @Test
+    void testValorNegativo() {
+        double resultado = calculo.CalcularImposto(-100.0);
+        assertEquals(0.0, resultado, 0.0001);
     }
 
 }
